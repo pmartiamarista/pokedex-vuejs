@@ -1,0 +1,64 @@
+<template>
+  <v-card class="mx-auto" width="256" flat>
+    <v-list>
+      <v-list-item>
+        <v-list-item-avatar>
+          <v-img :src="logo" />
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title class="title"> Pokédex </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+    <v-divider></v-divider>
+    <v-list nav dense>
+      <v-list-item-group v-model="selectedItem" color="primary">
+        <v-list-item
+          v-for="({ title, to, icon }, i) in items"
+          :key="i"
+          :to="to"
+        >
+          <v-list-item-icon>
+            <v-icon v-text="icon" />
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title v-text="title" />
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-item-group>
+    </v-list>
+  </v-card>
+</template>
+
+<script>
+import logo from "../assets/poke-menu-logo.png";
+export default {
+  name: "DrawerMenu",
+  props: {
+    routes: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  data() {
+    return {
+      logo,
+      selectedItem: 0,
+      items: this.routes.map(({ name, path, icon }) => ({
+        title: name,
+        to: path,
+        icon,
+      })),
+      // items: [
+      //   { text: "My Files", icon: "mdi-folder" },
+      //   { text: "Shared with me", icon: "mdi-account-multiple" },
+      //   { text: "Starred", icon: "mdi-star" },
+      //   { text: "Recent", icon: "mdi-history" },
+      //   { text: "Offline", icon: "mdi-check-circle" },
+      //   { text: "Uploads", icon: "mdi-upload" },
+      //   { text: "Backups", icon: "mdi-cloud-upload" },
+      // ],
+    };
+  },
+};
+</script>
