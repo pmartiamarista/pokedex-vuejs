@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <Header :handleDrawer="handleDrawer" />
-    <v-navigation-drawer v-model="drawer" fixed temporary>
+    <v-navigation-drawer v-model="drawer" absolute temporary>
       <DrawerMenu :routes="getRoutesMenu" />
     </v-navigation-drawer>
     <v-main class="overflow-y-auto grey lighten-2">
