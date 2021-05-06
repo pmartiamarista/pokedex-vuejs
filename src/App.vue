@@ -1,10 +1,10 @@
 <template>
-  <v-app>
-    <Header :handleDrawer="handleDrawer" />
+  <v-app id="inspire">
+    <Header :handleDrawer="handleDrawer" :routes="getRoutesMenu" />
     <v-navigation-drawer v-model="drawer" absolute temporary>
       <DrawerMenu :routes="getRoutesMenu" />
     </v-navigation-drawer>
-    <v-main class="overflow-y-auto grey lighten-2">
+    <v-main class="overflow-y-auto grey lighten-4">
       <v-container fluid>
         <transition name="fade">
           <router-view />

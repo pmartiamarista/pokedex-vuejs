@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div v-if="$apollo.queries.generations.loading">
+    <div v-if="$apollo.queries.regions.loading">
       <v-progress-linear color="primary" indeterminate rounded height="10" />
     </div>
-    <div v-else-if="$apollo.queries.error">Error</div>
+    <div v-else-if="$apollo.queries.regions.error">Error</div>
     <div v-else>
       <v-col class="pa-0">
         <v-col class="pa-0">
@@ -18,17 +18,13 @@
               prev-icon="mdi-arrow-left-bold-circle-outline"
               show-arrows
             >
-              <v-tab
-                v-for="gen in generations"
-                :key="gen.id"
-                v-text="`Generation ${gen.id}`"
-              />
+              <v-tab v-for="{ name } in regions" :key="name" v-text="name" />
             </v-tabs>
           </v-card>
         </v-col>
         <v-col class="px-1">
           <v-card flat rounded elevation="2">
-            <List :gen="selectedGen + 1" :key="`gen-list-${selectedGen + 1}`" />
+            <ListView :gen="selectedGen + 1" />
           </v-card>
         </v-col>
       </v-col>
@@ -37,18 +33,24 @@
 </template>
 
 <script>
-import List from "../components/List.vue";
-import { GENERATIONS_QUERY } from "../graphql/queries";
+import ListView from "./ListView.vue";
+import { REGIONS_QUERY } from "../graphql/queries";
 
 export default {
-  components: { List },
+  components: { ListView },
   name: "Home",
   data: () => ({
-    generations: null,
+    regions: null,
     selectedGen: 0,
   }),
   apollo: {
-    generations: { query: GENERATIONS_QUERY, fetchPolicy: "cache-and-network" },
+    regions: {
+      query: REGIONS_QUERY,
+      fetchPolicy: "cache-and-network",
+      nextFetchPolicy: "cache-only",
+      update: ({ regions }) =>
+        regions.results.map((region, index) => ({ id: index + 1, ...region })),
+    },
   },
 };
 </script>

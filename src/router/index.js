@@ -8,12 +8,14 @@ const routes = [
     path: '/',
     name: 'Home',
     component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue'),
-    icon: 'mdi-home-circle-outline'
+    icon: 'mdi-home-circle-outline',
+    meta: { showTabs: false },
   },
   {
-    path: '/gens',
-    name: 'Generations',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Generations.vue')
+    path: '/regions',
+    name: 'Regions',
+    meta: { showTabs: true },
+    component: () => import(/* webpackChunkName: "about" */ '../views/Regions.vue')
   }
 ]
 

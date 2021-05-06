@@ -1,34 +1,28 @@
 <template>
-  <v-card>
-    <v-card-title class="pokemon-name" v-text="item.name"/>
-    <v-card-text>
-    </v-card-text>
-    <v-card-actions>
-      <v-btn text color="teal accent-4" @click="reveal = true">
-        Learn More
-      </v-btn>
-    </v-card-actions>
-    <v-expand-transition>
-      <v-card
-        v-if="reveal"
-        class="transition-fast-in-fast-out v-card--reveal"
-        style="height: 100%"
-      >
-        <v-card-text class="pb-0">
-        </v-card-text>
-        <v-card-actions class="pt-0">
-          <v-btn text color="teal accent-4" @click="reveal = false">
-            Close
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-expand-transition>
-  </v-card>
+  <div>
+    <v-list-item :key="item">
+      <v-list-item-action>
+        <v-btn fab small depressed color="primary"> </v-btn>
+      </v-list-item-action>
+
+      <v-list-item-content>
+        <v-list-item-title>
+          <strong class="pokemon-name">{{ item.name }}</strong>
+        </v-list-item-title>
+      </v-list-item-content>
+
+      <v-list-item-action>
+        <v-icon small> mdi-open-in-new </v-icon>
+      </v-list-item-action>
+    </v-list-item>
+
+    <v-divider></v-divider>
+  </div>
 </template>
 
 <script>
 export default {
-  name: "ListTile",
+  name: "GridTile",
   props: {
     item: { type: Object, default: () => {} },
   },
@@ -46,7 +40,7 @@ export default {
   position: absolute;
   width: 100%;
 }
-.pokemon-name{
+.pokemon-name {
   text-transform: capitalize;
 }
 </style>
