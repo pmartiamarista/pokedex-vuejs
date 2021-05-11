@@ -9,12 +9,10 @@ const routes = [
     name: 'Home',
     component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue'),
     icon: 'mdi-home-circle-outline',
-    meta: { showTabs: false },
   },
   {
     path: '/regions',
     name: 'Regions',
-    meta: { showTabs: true },
     component: () => import(/* webpackChunkName: "about" */ '../views/Regions.vue')
   }
 ]

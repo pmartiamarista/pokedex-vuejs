@@ -6,7 +6,7 @@
           <v-img :src="logo" />
         </v-list-item-avatar>
         <v-list-item-content>
-          <v-list-item-title class="title"> Pokédex </v-list-item-title>
+          <v-list-item-title class="title">Pokédex</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -31,25 +31,19 @@
 </template>
 
 <script>
-import logo from "../assets/poke-menu-logo.png";
+import logo from '../../assets/poke-menu-logo.png'
 export default {
-  name: "DrawerMenu",
-  props: {
-    routes: {
-      type: Array,
-      default: () => [],
-    },
-  },
+  name: 'DrawerMenu',
   data() {
     return {
       logo,
       selectedItem: 0,
-      items: this.routes.map(({ name, path, icon }) => ({
+      items: this.$router.options.routes.map(({ name, path, icon }) => ({
         title: name,
         to: path,
         icon,
       })),
-    };
+    }
   },
-};
+}
 </script>

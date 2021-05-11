@@ -8,16 +8,16 @@
               <v-skeleton-loader v-if="true" max-width="50" type="text" />
             </div>
             <v-list-item-title class="headline mb-1 pokemon-name">
-              <v-skeleton-loader v-if="true" max-width="200" type="heading"
-            /></v-list-item-title>
-            <v-list-item-subtitle
-              ><v-skeleton-loader v-if="true" max-width="50" type="sentences"
-            /></v-list-item-subtitle>
+              <v-skeleton-loader v-if="true" max-width="200" type="heading" />
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              <v-skeleton-loader v-if="true" max-width="50" type="sentences" />
+            </v-list-item-subtitle>
           </v-list-item-content>
           <v-skeleton-loader v-if="true" max-width="150" type="avatar" />
         </v-list-item>
         <v-card-actions>
-          <v-skeleton-loader v-if="true" max-width="200" type="text" />
+          <v-btn text color="secondary" @click="() => null">More</v-btn>
         </v-card-actions>
       </v-col>
     </v-card>
@@ -56,9 +56,9 @@
         <v-card
           v-if="reveal"
           class="transition-fast-in-fast-out v-card--reveal"
-          style="height: 100%"
+          style="height: 100%;"
         >
-          <v-card-text class="pb-0"> </v-card-text>
+          <v-card-text class="pb-0"></v-card-text>
           <v-card-actions class="pt-0">
             <v-btn text color="secondary" @click="reveal = false">Close</v-btn>
           </v-card-actions>
@@ -69,32 +69,29 @@
 </template>
 
 <script>
-import { POKEMON_BY_NAME } from "../graphql/queries";
+import { POKEMON_BY_NAME } from '../graphql/queries'
 
 export default {
-  name: "GridTile",
+  name: 'GridTile',
   props: {
-    name: { type: String, default: "" },
+    name: { type: String, default: '' },
   },
   data: () => ({
     reveal: false,
-    pokemon: "",
+    pokemon: '',
   }),
   apollo: {
     pokemon: {
       query: POKEMON_BY_NAME,
       variables() {
-        return { name: String(this.name).trim() };
+        return { name: String(this.name).trim() }
       },
-      fetchPolicy: "cache-and-network",
-      nextFetchPolicy: "cache-only",
-      update: ({ pokemon }) => {
-        console.log(pokemon);
-        return pokemon;
-      },
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-only',
+      update: ({ pokemon }) => pokemon,
     },
   },
-};
+}
 </script>
 
 <style>

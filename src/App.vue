@@ -1,8 +1,8 @@
 <template>
   <v-app id="inspire">
-    <Header :handleDrawer="handleDrawer" :routes="getRoutesMenu" />
+    <Header :handleDrawer="handleDrawer" />
     <v-navigation-drawer v-model="drawer" absolute temporary>
-      <DrawerMenu :routes="getRoutesMenu" />
+      <DrawerMenu />
     </v-navigation-drawer>
     <v-main class="overflow-y-auto grey lighten-4">
       <v-container fluid>
@@ -15,20 +15,15 @@
 </template>
 
 <script>
-import DrawerMenu from "./components/DrawerMenu.vue";
-import Header from "./components/Header.vue";
+import DrawerMenu from './components/layout/DrawerMenu.vue'
+import Header from './components/layout/Header.vue'
 export default {
   components: { Header, DrawerMenu },
   data: () => ({ drawer: null }),
   methods: {
     handleDrawer() {
-      this.drawer = !this.drawer;
+      this.drawer = !this.drawer
     },
   },
-  computed: {
-    getRoutesMenu() {
-      return this.$router.options.routes;
-    },
-  },
-};
+}
 </script>
