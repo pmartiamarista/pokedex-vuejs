@@ -32,6 +32,7 @@
 
 <script>
 import logo from '../../assets/poke-menu-logo.png'
+
 export default {
   name: 'DrawerMenu',
   data() {

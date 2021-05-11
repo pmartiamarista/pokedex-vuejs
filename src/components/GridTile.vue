@@ -22,7 +22,7 @@
     <v-card v-else>
       <v-list-item three-line>
         <v-list-item-content>
-          <div class="overline mb-0">#{{ pokemon.id }}</div>
+          <div class="overline mb-0">#{{ item.id }}</div>
           <v-list-item-title
             class="headline mb-1 pokemon-name"
             v-text="item.name"
@@ -71,6 +71,7 @@
 
 <script>
 import { POKEMON_BY_NAME } from '../graphql/queries'
+import { getTypes, getStats } from '../utils/utils'
 
 export default {
   name: 'GridTile',
@@ -89,7 +90,11 @@ export default {
       },
       fetchPolicy: 'cache-and-network',
       nextFetchPolicy: 'cache-only',
-      update: ({ pokemon }) => pokemon,
+      update: ({ pokemon }) => ({
+        ...pokemon,
+        stats: getStats(pokemon.stats),
+        types: getTypes(pokemon.types),
+      }),
     },
   },
 }
