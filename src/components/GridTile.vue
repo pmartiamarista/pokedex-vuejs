@@ -4,17 +4,12 @@
       <v-col class="pa-0">
         <v-list-item three-line>
           <v-list-item-content>
-            <div class="overline mb-0">
-              <v-skeleton-loader v-if="true" max-width="50" type="text" />
-            </div>
-            <v-list-item-title class="headline mb-1 pokemon-name">
-              <v-skeleton-loader v-if="true" max-width="200" type="heading" />
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              <v-skeleton-loader v-if="true" max-width="50" type="sentences" />
-            </v-list-item-subtitle>
+            <div class="overline mb-0">#{{ item.id }}</div>
+            <v-list-item-title
+              class="headline mb-1 pokemon-name"
+              v-text="item.name"
+            />
           </v-list-item-content>
-          <v-skeleton-loader v-if="true" max-width="150" type="avatar" />
         </v-list-item>
         <v-card-actions>
           <v-btn text color="secondary" @click="() => null">More</v-btn>
@@ -30,17 +25,23 @@
           <div class="overline mb-0">#{{ pokemon.id }}</div>
           <v-list-item-title
             class="headline mb-1 pokemon-name"
-            v-text="pokemon.name"
+            v-text="item.name"
           />
           <!-- <v-list-item-subtitle
             >Greyhound divisely hello coldly fonwderfully</v-list-item-subtitle
           > -->
         </v-list-item-content>
         <v-img
-          :src="pokemon.sprites.front_default"
-          :lazy-src="pokemon.sprites.front_default"
-          max-width="120"
-          max-height="120"
+          :src="
+            (pokemon.sprites && pokemon.sprites.front_default) ||
+            require('../assets/Unown.png')
+          "
+          :lazy-src="
+            (pokemon.sprites && pokemon.sprites.front_default) ||
+            require('../assets/Unown.png')
+          "
+          max-width="80"
+          max-height="80"
         >
           <template v-slot:placeholder>
             <v-row class="fill-height ma-0" align="center" justify="center">
@@ -74,7 +75,7 @@ import { POKEMON_BY_NAME } from '../graphql/queries'
 export default {
   name: 'GridTile',
   props: {
-    name: { type: String, default: '' },
+    item: { type: Object, default: () => {} },
   },
   data: () => ({
     reveal: false,
@@ -84,7 +85,7 @@ export default {
     pokemon: {
       query: POKEMON_BY_NAME,
       variables() {
-        return { name: String(this.name).trim() }
+        return { name: String(this.item.name).trim() }
       },
       fetchPolicy: 'cache-and-network',
       nextFetchPolicy: 'cache-only',

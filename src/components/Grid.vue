@@ -1,39 +1,28 @@
 <template>
   <v-col class="pa-0">
-    <div v-if="gridData.error">Error</div>
-    <v-col v-else class="pa-0">
-      <v-container fluid>
-        <v-data-iterator
-          :loading="gridData.status === fetchStatus.fetching"
-          :items="gridData.list"
-          :items-per-page.sync="itemsPerPage"
-          options.sync=""
+    <v-container fluid v-if="gridData.status === fetchStatus.fetching">
+      <v-row>
+        <v-col v-for="n in 50" :key="n" cols="12" sm="6" md="4" lg="3" xl="2">
+          <v-skeleton-loader type="image" />
+        </v-col>
+      </v-row>
+    </v-container>
+    <div v-else-if="gridData.error === fetchStatus.error">Error</div>
+    <v-container fluid v-else>
+      <v-row>
+        <v-col
+          v-for="pokemon in getItems"
+          :key="pokemon.id"
+          cols="12"
+          sm="6"
+          md="4"
+          lg="3"
+          xl="2"
         >
-          <template v-slot:loading>
-            <v-progress-linear
-              color="primary"
-              indeterminate
-              rounded
-              height="10"
-            />
-          </template>
-          <template v-slot:default="props">
-            <v-row>
-              <v-col
-                v-for="{ name } in props.items"
-                :key="name"
-                cols="12"
-                sm="6"
-                md="4"
-                lg="3"
-              >
-                <GridTile :name="name" />
-              </v-col>
-            </v-row>
-          </template>
-        </v-data-iterator>
-      </v-container>
-    </v-col>
+          <GridTile :item="pokemon" />
+        </v-col>
+      </v-row>
+    </v-container>
   </v-col>
 </template>
 
@@ -49,5 +38,10 @@ export default {
     itemsPerPage: 15,
     fetchStatus,
   }),
+  computed: {
+    getItems() {
+      return this.gridData.loading ? 3 : this.gridData.list
+    },
+  },
 }
 </script>

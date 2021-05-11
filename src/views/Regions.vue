@@ -19,7 +19,7 @@ const initialState = { status: fetchStatus.idle, list: [], error: null }
 
 export default {
   components: { Grid },
-  name: 'Home',
+  name: 'Regions',
   data: () => ({
     pokemonByRegion: {
       status: fetchStatus.idle,
@@ -33,11 +33,6 @@ export default {
   methods: {
     ...mapMutations(['setTabs', 'cleanTabs']),
     ...mapActions(['fetchTabs']),
-    changeResponse(data) {
-      return data.pokemon_v2_generation[0].pokemon_species.list.sort(
-        (a, b) => a.id - b.id,
-      )
-    },
     async fetchPokemonsByRegion(id) {
       try {
         this.pokemonByRegion = {
@@ -50,7 +45,9 @@ export default {
         })
         this.pokemonByRegion = {
           ...initialState,
-          list: this.changeResponse(data),
+          list: data.pokemon_v2_generation[0].pokemon_species.list.sort(
+            (a, b) => a.id - b.id,
+          ),
           status: fetchStatus.done,
         }
       } catch (error) {
@@ -72,11 +69,12 @@ export default {
   created() {
     this.fetchTabs({
       query: REGIONS_QUERY,
+      apollo: apolloProvider.defaultClient.query,
       changeResponse: ({ regions }) =>
         regions.results.map((region, index) => ({ id: index + 1, ...region })),
     })
   },
-  beforeDestroy() {
+  destroyed() {
     this.cleanTabs()
   },
 }

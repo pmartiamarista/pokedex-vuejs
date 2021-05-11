@@ -13,7 +13,14 @@ const routes = [
   {
     path: '/regions',
     name: 'Regions',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Regions.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/Regions.vue'),
+    icon: 'mdi-earth',
+  },
+  {
+    path: '/types',
+    name: 'Types',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Types.vue'),
+    icon: 'mdi-atom',
   }
 ]
 

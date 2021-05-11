@@ -1,19 +1,19 @@
-import gql from "graphql-tag";
+import gql from 'graphql-tag'
 
 export const REGIONS_QUERY = gql`
   query REGIONS_QUERY {
-    regions{
-      results{
+    regions {
+      results {
         url
         name
       }
     }
   }
-`;
+`
 
 export const POKEMONS_BY_REGION_QUERY = gql`
   query POKEMONS_BY_REGION_QUERY($id: Int) {
-    pokemon_v2_generation(where: {region_id: {_eq: $id}}) {
+    pokemon_v2_generation(where: { region_id: { _eq: $id } }) {
       id
       region_id
       pokemon_species: pokemon_v2_pokemonspecies_aggregate {
@@ -24,7 +24,25 @@ export const POKEMONS_BY_REGION_QUERY = gql`
       }
     }
   }
-`;
+`
+
+export const POKEMONS_BY_TYPE_QUERY = gql`
+  query POKEMONS_BY_TYPE_QUERY {
+    types: pokemon_v2_type {
+      name
+      id
+      generation_id
+      pokemons: pokemon_v2_pokemontypes_aggregate {
+        nodes {
+          pokemon: pokemon_v2_pokemon {
+            name
+            id
+          }
+        }
+      }
+    }
+  }
+`
 
 export const POKEMON_BY_NAME = gql`
   query POKEMON_BY_NAME($name: String!) {
@@ -52,5 +70,5 @@ export const POKEMON_BY_NAME = gql`
         back_shiny
       }
     }
-}
-`;
+  }
+`

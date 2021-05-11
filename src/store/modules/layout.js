@@ -1,5 +1,3 @@
-import apolloProvider from '../../vue-apollo'
-
 const initialState = {
   tabs: [],
   loading: true,
@@ -14,7 +12,7 @@ export default {
   getters: {
     isHeaderTabsLoading: (state) => state.loading,
     hasTabs: (state) => state.tabs.length > 0,
-    selectedTabData: (state) => state.tabs[state.selectedTab],
+    selectedTabData: (state) => state.tabs[state.selectedTab] || { id: 1 },
   },
   mutations: {
     setTabs(state, payload) {
@@ -33,14 +31,14 @@ export default {
   actions: {
     async fetchTabs(
       { commit },
-      { query, changeResponse = (response) => response },
+      { query, apollo, changeResponse = (response) => response },
     ) {
       try {
         commit('setLoading', true)
-        const { data } = await apolloProvider.defaultClient.query({
+        const { data } = await apollo({
           query,
         })
-        commit('setTabs', changeResponse(data));
+        commit('setTabs', changeResponse(data))
       } catch (error) {
         console.log(error)
       } finally {
