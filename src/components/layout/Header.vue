@@ -4,7 +4,7 @@
     <v-toolbar-title v-text="routeName" />
     <v-spacer />
     <Searchbar />
-    <template v-slot:extension v-if="hasTabs && !isHeaderTabsLoading">
+    <template v-slot:extension v-if="showTabs">
       <v-tabs
         center-active
         fixed-tabs
@@ -24,8 +24,9 @@
 
 <script>
 import { createNamespacedHelpers } from 'vuex'
+import { fetchStatus } from '../../utils/constants'
 import Searchbar from '../Searchbar.vue'
-const { mapGetters, mapState, mapMutations } = createNamespacedHelpers('layout')
+const { mapGetters, mapState, mapActions } = createNamespacedHelpers('layout')
 
 export default {
   name: 'Drawer',
@@ -37,13 +38,16 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['setSelectedTab']),
+    ...mapActions(['setSelectedTab']),
   },
   computed: {
-    ...mapGetters(['isHeaderTabsLoading', 'hasTabs']),
-    ...mapState(['tabs', 'selectedTab']),
+    ...mapGetters(['hasTabs']),
+    ...mapState(['tabs', 'selectedTab', 'isTabBarLoading']),
     routeName() {
       return this.$route.name
+    },
+    showTabs() {
+      return this.hasTabs && this.isTabBarLoading === fetchStatus.done
     },
   },
 }

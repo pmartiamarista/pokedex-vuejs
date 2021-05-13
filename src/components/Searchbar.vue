@@ -14,7 +14,7 @@
 
 <script>
 import { createNamespacedHelpers } from 'vuex'
-const { mapMutations: layoutMutation } = createNamespacedHelpers('layout')
+const { mapActions } = createNamespacedHelpers('layout')
 
 const DEBOUNCE_TIME = 400
 export default {
@@ -29,7 +29,7 @@ export default {
     search: '',
   }),
   methods: {
-    ...layoutMutation(['setSearch']),
+    ...mapActions(['setSearch']),
   },
   watch: {
     search(newValue) {

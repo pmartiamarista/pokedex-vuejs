@@ -1,6 +1,8 @@
+import { fetchStatus } from '../../utils/constants'
+
 const initialState = {
   tabs: [],
-  loading: true,
+  isTabBarLoading: fetchStatus.idle,
   selectedTab: 0,
   tabDataList: [],
   search: '',
@@ -10,24 +12,23 @@ export default {
   namespaced: true,
   state: { ...initialState },
   getters: {
-    isHeaderTabsLoading: (state) => state.loading,
     hasTabs: (state) => state.tabs.length > 0,
     selectedTabData: (state) => state.tabs[state.selectedTab] || { id: 1 },
   },
   mutations: {
-    setTabs(state, payload) {
+    SET_TABS(state, payload) {
       state.tabs = payload
     },
-    setSelectedTab(state, payload) {
+    SET_SELECTED_TAB(state, payload) {
       state.selectedTab = payload
     },
-    setLoading(state, payload) {
-      state.loading = payload
+    SET_LOADING(state, payload) {
+      state.isTabBarLoading = payload
     },
-    setSearch(state, payload) {
+    SET_SEARCH(state, payload) {
       state.search = payload
     },
-    cleanTabs(state) {
+    RESET_TABS(state) {
       Object.assign(state, initialState)
     },
   },
@@ -36,17 +37,25 @@ export default {
       { commit },
       { query, apollo, changeResponse = (response) => response },
     ) {
+      commit('SET_LOADING', fetchStatus.fetching)
       try {
-        commit('setLoading', true)
         const { data } = await apollo.query({
           query,
         })
-        commit('setTabs', changeResponse(data))
+        commit('SET_TABS', changeResponse(data))
+        commit('SET_LOADING', fetchStatus.done)
       } catch (error) {
-        console.log(error)
-      } finally {
-        commit('setLoading', false)
+        commit('SET_LOADING', fetchStatus.error)
       }
+    },
+    setSearch({ commit }, payload) {
+      commit('SET_SEARCH', payload)
+    },
+    setSelectedTab({ commit }, payload) {
+      commit('SET_SELECTED_TAB', payload)
+    },
+    resetTabs({ commit }, payload) {
+      commit('RESET_TABS', payload)
     },
   },
 }

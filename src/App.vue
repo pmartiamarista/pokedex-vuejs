@@ -7,7 +7,7 @@
     <v-main>
       <v-container fluid>
         <transition name="fade">
-          <router-view />
+          <router-view :key="$router.fullPath" />
         </transition>
       </v-container>
     </v-main>

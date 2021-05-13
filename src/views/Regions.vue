@@ -1,10 +1,10 @@
 <template>
-  <v-col cols="12">
+  <PageWrapper>
     <Grid
-      v-if="!isHeaderTabsLoading"
+      v-if="showGrid"
       :gridData="{ ...pokemonByRegion, list: filteredList }"
     />
-  </v-col>
+  </PageWrapper>
 </template>
 
 <script>
@@ -14,18 +14,14 @@ import { createNamespacedHelpers } from 'vuex'
 import apolloProvider from '../vue-apollo'
 import { fetchStatus } from '../utils/constants'
 import { filterByKey } from '../utils/utils'
+import PageWrapper from '../components/PageWrapper.vue'
 
-const {
-  mapMutations,
-  mapActions,
-  mapGetters,
-  mapState,
-} = createNamespacedHelpers('layout')
+const { mapActions, mapGetters, mapState } = createNamespacedHelpers('layout')
 
 const initialState = { status: fetchStatus.idle, list: [], error: null }
 
 export default {
-  components: { Grid },
+  components: { Grid, PageWrapper },
   name: 'Regions',
   data: () => ({
     pokemonByRegion: {
@@ -35,8 +31,8 @@ export default {
     },
   }),
   computed: {
-    ...mapGetters(['selectedTabData', 'isHeaderTabsLoading']),
-    ...mapState(['search']),
+    ...mapGetters(['selectedTabData']),
+    ...mapState(['search', 'isTabBarLoading']),
     filteredList() {
       if (this.search) {
         return filterByKey(this.pokemonByRegion.list, 'name', this.search)
@@ -44,16 +40,18 @@ export default {
         return this.pokemonByRegion.list
       }
     },
+    showGrid() {
+      return this.isTabBarLoading === fetchStatus.done
+    },
   },
   methods: {
-    ...mapMutations(['setTabs', 'cleanTabs']),
-    ...mapActions(['fetchTabs']),
+    ...mapActions(['fetchTabs', 'resetTabs']),
     async fetchPokemonsByRegion(id) {
+      this.pokemonByRegion = {
+        ...initialState,
+        status: fetchStatus.fetching,
+      }
       try {
-        this.pokemonByRegion = {
-          ...initialState,
-          status: fetchStatus.fetching,
-        }
         const { data } = await apolloProvider.clients.pokeapi.query({
           query: POKEMONS_BY_REGION_QUERY,
           variables: { id },
@@ -91,7 +89,7 @@ export default {
     })
   },
   destroyed() {
-    this.cleanTabs()
+    this.resetTabs()
   },
 }
 </script>

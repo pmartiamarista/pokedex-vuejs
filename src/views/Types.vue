@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <PageWrapper>
     <Grid
-      v-if="!isHeaderTabsLoading"
+      v-if="showGrid"
       :gridData="{ ...pokemonByType, list: filteredList }"
     />
-  </div>
+  </PageWrapper>
 </template>
 
 <script>
@@ -14,18 +14,14 @@ import { createNamespacedHelpers } from 'vuex'
 import apolloProvider from '../vue-apollo'
 import { fetchStatus } from '../utils/constants'
 import { filterByKey } from '../utils/utils'
+import PageWrapper from '../components/PageWrapper.vue'
 
-const {
-  mapState,
-  mapMutations,
-  mapActions,
-  mapGetters,
-} = createNamespacedHelpers('layout')
+const { mapState, mapActions, mapGetters } = createNamespacedHelpers('layout')
 
 const initialState = { status: fetchStatus.idle, list: [], error: null }
 
 export default {
-  components: { Grid },
+  components: { Grid, PageWrapper },
   name: 'Types',
   data: () => ({
     pokemonByType: {
@@ -35,8 +31,8 @@ export default {
     },
   }),
   computed: {
-    ...mapGetters(['selectedTabData', 'isHeaderTabsLoading']),
-    ...mapState(['search']),
+    ...mapGetters(['selectedTabData']),
+    ...mapState(['search', 'isTabBarLoading']),
     filteredList() {
       if (this.search) {
         return filterByKey(this.pokemonByType.list, 'name', this.search)
@@ -44,10 +40,12 @@ export default {
         return this.pokemonByType.list
       }
     },
+    showGrid() {
+      return this.isTabBarLoading === fetchStatus.done
+    },
   },
   methods: {
-    ...mapMutations(['setTabs', 'cleanTabs']),
-    ...mapActions(['fetchTabs']),
+    ...mapActions(['fetchTabs', 'resetTabs']),
     fakeRequest(list) {
       return new Promise((resolve) => setTimeout(() => resolve(list), 0))
     },
@@ -83,7 +81,7 @@ export default {
     })
   },
   destroyed() {
-    this.cleanTabs()
+    this.resetTabs()
   },
 }
 </script>
