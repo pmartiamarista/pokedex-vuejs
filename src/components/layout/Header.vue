@@ -1,7 +1,9 @@
 <template>
   <v-app-bar app>
     <v-app-bar-nav-icon @click="handleDrawer"></v-app-bar-nav-icon>
-    <v-toolbar-title>{{ routeName }}</v-toolbar-title>
+    <v-toolbar-title v-text="routeName" />
+    <v-spacer />
+    <Searchbar />
     <template v-slot:extension v-if="hasTabs && !isHeaderTabsLoading">
       <v-tabs
         center-active
@@ -11,7 +13,7 @@
         show-arrows
         @change="setSelectedTab"
       >
-        <v-tabs-slider color="yellow"></v-tabs-slider>
+        <v-tabs-slider></v-tabs-slider>
         <v-tab v-for="{ name, id } in tabs" :key="id">
           {{ name }}
         </v-tab>
@@ -22,10 +24,12 @@
 
 <script>
 import { createNamespacedHelpers } from 'vuex'
+import Searchbar from '../Searchbar.vue'
 const { mapGetters, mapState, mapMutations } = createNamespacedHelpers('layout')
 
 export default {
   name: 'Drawer',
+  components: { Searchbar },
   props: {
     handleDrawer: {
       type: Function,

@@ -1,7 +1,10 @@
 <template>
-  <div>
-    <Grid v-if="!isHeaderTabsLoading" :gridData="pokemonByRegion" />
-  </div>
+  <v-col cols="12">
+    <Grid
+      v-if="!isHeaderTabsLoading"
+      :gridData="{ ...pokemonByRegion, list: filteredList }"
+    />
+  </v-col>
 </template>
 
 <script>
@@ -10,10 +13,14 @@ import { REGIONS_QUERY, POKEMONS_BY_REGION_QUERY } from '../graphql/queries'
 import { createNamespacedHelpers } from 'vuex'
 import apolloProvider from '../vue-apollo'
 import { fetchStatus } from '../utils/constants'
+import { filterByKey } from '../utils/utils'
 
-const { mapMutations, mapActions, mapGetters } = createNamespacedHelpers(
-  'layout',
-)
+const {
+  mapMutations,
+  mapActions,
+  mapGetters,
+  mapState,
+} = createNamespacedHelpers('layout')
 
 const initialState = { status: fetchStatus.idle, list: [], error: null }
 
@@ -29,6 +36,14 @@ export default {
   }),
   computed: {
     ...mapGetters(['selectedTabData', 'isHeaderTabsLoading']),
+    ...mapState(['search']),
+    filteredList() {
+      if (this.search) {
+        return filterByKey(this.pokemonByRegion.list, 'name', this.search)
+      } else {
+        return this.pokemonByRegion.list
+      }
+    },
   },
   methods: {
     ...mapMutations(['setTabs', 'cleanTabs']),
@@ -64,12 +79,13 @@ export default {
         this.fetchPokemonsByRegion(id)
       },
       deep: true,
+      immediate: true,
     },
   },
   created() {
     this.fetchTabs({
       query: REGIONS_QUERY,
-      apollo: apolloProvider.defaultClient.query,
+      apollo: apolloProvider.defaultClient,
       changeResponse: ({ regions }) =>
         regions.results.map((region, index) => ({ id: index + 1, ...region })),
     })

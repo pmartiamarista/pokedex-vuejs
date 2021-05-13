@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-col cols="12" sm="6" md="4" lg="3" xl="2" class="ma-0">
     <v-card v-if="$apollo.queries.pokemon.loading">
       <v-col class="pa-0">
         <v-list-item three-line>
@@ -66,7 +66,7 @@
         </v-card>
       </v-expand-transition>
     </v-card>
-  </div>
+  </v-col>
 </template>
 
 <script>

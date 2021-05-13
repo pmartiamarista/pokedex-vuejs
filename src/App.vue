@@ -1,16 +1,17 @@
 <template>
-  <v-app id="inspire">
-    <Header :handleDrawer="handleDrawer" />
-    <v-navigation-drawer v-model="drawer" absolute temporary>
+  <v-app>
+    <v-navigation-drawer v-model="drawer" app>
       <DrawerMenu />
     </v-navigation-drawer>
-    <v-main class="overflow-y-auto grey lighten-4">
+    <Header :handleDrawer="handleDrawer" />
+    <v-main>
       <v-container fluid>
         <transition name="fade">
           <router-view />
         </transition>
       </v-container>
     </v-main>
+    <!-- <v-footer app></v-footer> -->
   </v-app>
 </template>
 

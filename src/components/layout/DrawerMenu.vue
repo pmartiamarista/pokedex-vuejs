@@ -1,6 +1,6 @@
 <template>
   <v-card class="mx-auto" width="256" flat>
-    <v-list>
+    <v-list nav dense>
       <v-list-item>
         <v-list-item-avatar>
           <v-img :src="logo" />
@@ -8,6 +8,14 @@
         <v-list-item-content>
           <v-list-item-title class="title">Pokédex</v-list-item-title>
         </v-list-item-content>
+        <v-list-item-action>
+          <v-switch
+            v-model="dark"
+            hide-details
+            inset
+            @change="onDarkModeChange"
+          />
+        </v-list-item-action>
       </v-list-item>
     </v-list>
     <v-divider></v-divider>
@@ -38,6 +46,7 @@ export default {
   data() {
     return {
       logo,
+      dark: this.$vuetify.theme.dark,
       selectedItem: 0,
       items: this.$router.options.routes.map(({ name, path, icon }) => ({
         title: name,
@@ -45,6 +54,12 @@ export default {
         icon,
       })),
     }
+  },
+  methods: {
+    onDarkModeChange() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+      localStorage.setItem('theme', this.$vuetify.theme.dark ? 'dark' : 'light')
+    },
   },
 }
 </script>

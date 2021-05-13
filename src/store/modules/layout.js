@@ -2,13 +2,13 @@ const initialState = {
   tabs: [],
   loading: true,
   selectedTab: 0,
+  tabDataList: [],
+  search: '',
 }
 
 export default {
   namespaced: true,
-  state: {
-    ...initialState,
-  },
+  state: { ...initialState },
   getters: {
     isHeaderTabsLoading: (state) => state.loading,
     hasTabs: (state) => state.tabs.length > 0,
@@ -24,6 +24,9 @@ export default {
     setLoading(state, payload) {
       state.loading = payload
     },
+    setSearch(state, payload) {
+      state.search = payload
+    },
     cleanTabs(state) {
       Object.assign(state, initialState)
     },
@@ -35,7 +38,7 @@ export default {
     ) {
       try {
         commit('setLoading', true)
-        const { data } = await apollo({
+        const { data } = await apollo.query({
           query,
         })
         commit('setTabs', changeResponse(data))

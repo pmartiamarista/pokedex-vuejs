@@ -10,17 +10,11 @@
     <div v-else-if="gridData.error === fetchStatus.error">Error</div>
     <v-container fluid v-else>
       <v-row>
-        <v-col
+        <GridTile
           v-for="pokemon in getItems"
           :key="pokemon.id"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-          xl="2"
-        >
-          <GridTile :item="pokemon" />
-        </v-col>
+          :item="pokemon"
+        />
       </v-row>
     </v-container>
   </v-col>
@@ -33,7 +27,7 @@ import { fetchStatus } from '../utils/constants'
 export default {
   name: 'Grid',
   components: { GridTile },
-  props: ['gridData'],
+  props: { gridData: { type: Object, default: () => {} } },
   data: () => ({
     itemsPerPage: 15,
     fetchStatus,
