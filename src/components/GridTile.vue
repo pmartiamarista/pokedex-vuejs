@@ -87,14 +87,14 @@
         <span>Shiny</span>
       </v-tooltip>
 
-      <h4 class="font-weight-bold subtitle mb-0">#{{ item.id }}</h4>
+      <h4 class="font-weight-bold subtitle mb-0">#{{ pokemon.id }}</h4>
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
           <h1
             v-bind="attrs"
             v-on="on"
             class="font-weight-dark title mb-0 pokemon-name"
-            v-text="item.name"
+            v-text="pokemon.name"
           />
         </template>
         <span v-text="item.name" class="pokemon-name" />

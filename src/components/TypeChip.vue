@@ -8,7 +8,7 @@
         small
         dense
         v-text="type"
-        style="text-transform: capitalize; font-weight: 500; opacity: 0.75;"
+        style="text-transform: capitalize; font-weight: 500; opacity: 0.8;"
       />
     </template>
     <span v-text="type" style="text-transform: capitalize;" />
