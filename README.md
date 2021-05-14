@@ -1,4 +1,4 @@
-# pokedex
+# Pokedex VUE.JS
 
 ## Project setup
 ```
