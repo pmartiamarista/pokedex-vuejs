@@ -6,9 +6,7 @@
     <Header :handleDrawer="handleDrawer" />
     <v-main>
       <v-container fluid>
-        <transition name="fade">
-          <router-view :key="$router.fullPath" />
-        </transition>
+        <router-view :key="$router.fullPath" />
       </v-container>
     </v-main>
     <!-- <v-footer app></v-footer> -->

@@ -4,18 +4,28 @@
     <v-toolbar-title v-text="routeName" />
     <v-spacer />
     <Searchbar />
+    <v-progress-linear
+      :active="showLoading"
+      :indeterminate="true"
+      absolute
+      bottom
+    />
     <template v-slot:extension v-if="showTabs">
       <v-tabs
+        centered
         center-active
-        fixed-tabs
         next-icon="mdi-arrow-right-bold-circle-outline"
         prev-icon="mdi-arrow-left-bold-circle-outline"
         show-arrows
         @change="setSelectedTab"
       >
-        <v-tabs-slider></v-tabs-slider>
-        <v-tab v-for="{ name, id } in tabs" :key="id">
-          {{ name }}
+        <v-tabs-slider />
+
+        <v-tab v-for="({ name, id }, index) in tabs" :key="id">
+          <v-badge :content="badgeCount" v-if="index === selectedTab">
+            {{ name }}
+          </v-badge>
+          <span v-else v-text="name" />
         </v-tab>
       </v-tabs>
     </template>
@@ -42,9 +52,12 @@ export default {
   },
   computed: {
     ...mapGetters(['hasTabs']),
-    ...mapState(['tabs', 'selectedTab', 'isTabBarLoading']),
+    ...mapState(['tabs', 'selectedTab', 'isTabBarLoading', 'badgeCount']),
     routeName() {
       return this.$route.name
+    },
+    showLoading() {
+      return this.isTabBarLoading === fetchStatus.fetching
     },
     showTabs() {
       return this.hasTabs && this.isTabBarLoading === fetchStatus.done

@@ -2,11 +2,9 @@ import gql from 'graphql-tag'
 
 export const REGIONS_QUERY = gql`
   query REGIONS_QUERY {
-    regions {
-      results {
-        url
-        name
-      }
+    regions: pokemon_v2_region {
+      id
+      name
     }
   }
 `

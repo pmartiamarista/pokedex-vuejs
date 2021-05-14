@@ -1,24 +1,24 @@
 <template>
   <PageWrapper>
     <Grid
-      v-if="showGrid"
+      v-show="showGrid"
       :gridData="{ ...pokemonByRegion, list: filteredList }"
+      :tile="GridTile"
     />
   </PageWrapper>
 </template>
 
 <script>
 import Grid from '../components/Grid'
+import GridTile from '../components/GridTile'
 import { REGIONS_QUERY, POKEMONS_BY_REGION_QUERY } from '../graphql/queries'
 import { createNamespacedHelpers } from 'vuex'
 import apolloProvider from '../vue-apollo'
-import { fetchStatus } from '../utils/constants'
+import { fetchStatus, initialState } from '../utils/constants'
 import { filterByKey } from '../utils/utils'
 import PageWrapper from '../components/PageWrapper.vue'
 
 const { mapActions, mapGetters, mapState } = createNamespacedHelpers('layout')
-
-const initialState = { status: fetchStatus.idle, list: [], error: null }
 
 export default {
   components: { Grid, PageWrapper },
@@ -29,15 +29,21 @@ export default {
       list: [],
       error: null,
     },
+    GridTile,
   }),
   computed: {
     ...mapGetters(['selectedTabData']),
     ...mapState(['search', 'isTabBarLoading']),
     filteredList() {
       if (this.search) {
-        return filterByKey(this.pokemonByRegion.list, 'name', this.search)
+        const filtered =
+          filterByKey(this.pokemonByRegion.list, 'name', this.search) || []
+        this.setBadgeCount(filtered.length)
+        return filtered
       } else {
-        return this.pokemonByRegion.list
+        const list = this.pokemonByRegion.list || []
+        this.setBadgeCount(list.length)
+        return list
       }
     },
     showGrid() {
@@ -45,7 +51,14 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['fetchTabs', 'resetTabs']),
+    ...mapActions(['fetchTabs', 'resetTabs', 'setBadgeCount']),
+    tabsFetch() {
+      this.fetchTabs({
+        query: REGIONS_QUERY,
+        apollo: apolloProvider.clients.pokeapi,
+        changeResponse: ({ regions }) => regions,
+      })
+    },
     async fetchPokemonsByRegion(id) {
       this.pokemonByRegion = {
         ...initialState,
@@ -81,14 +94,9 @@ export default {
     },
   },
   created() {
-    this.fetchTabs({
-      query: REGIONS_QUERY,
-      apollo: apolloProvider.defaultClient,
-      changeResponse: ({ regions }) =>
-        regions.results.map((region, index) => ({ id: index + 1, ...region })),
-    })
+    this.tabsFetch()
   },
-  destroyed() {
+  beforeDestroy() {
     this.resetTabs()
   },
 }

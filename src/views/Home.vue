@@ -1,15 +1,13 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-  </div>
+  <PageWrapper>
+    
+  </PageWrapper>
 </template>
 
 <script>
-// @ is an alias to /src
-
+import PageWrapper from '../components/PageWrapper.vue'
 export default {
-  name: 'Generations',
-  components: {
-  }
+  components: { PageWrapper },
+  name: 'Home',
 }
 </script>

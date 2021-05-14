@@ -1,40 +1,48 @@
 <template>
-  <v-col class="pa-0">
-    <v-container fluid v-if="gridData.status === fetchStatus.fetching">
-      <v-row>
-        <v-col v-for="n in 50" :key="n" cols="12" sm="6" md="4" lg="3" xl="2">
-          <v-skeleton-loader type="image" />
-        </v-col>
-      </v-row>
-    </v-container>
-    <div v-else-if="gridData.error === fetchStatus.error">Error</div>
-    <v-container fluid v-else>
-      <v-row>
-        <GridTile
-          v-for="pokemon in getItems"
-          :key="pokemon.id"
-          :item="pokemon"
-        />
-      </v-row>
-    </v-container>
-  </v-col>
+  <v-container fluid>
+    <v-row v-if="showLoading">
+      <v-col v-for="n in 50" :key="n" cols="12" sm="6" md="4" lg="3" xl="2">
+        <v-skeleton-loader type="image" max-height="300" />
+      </v-col>
+    </v-row>
+
+    <div v-else-if="showError">Error</div>
+
+    <v-row v-else>
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+        xl="2"
+        class="ma-0"
+        v-for="item in getItems"
+        :key="item.id"
+      >
+        <component :is="tile" :item="item" />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import GridTile from './GridTile.vue'
 import { fetchStatus } from '../utils/constants'
 
 export default {
   name: 'Grid',
-  components: { GridTile },
-  props: { gridData: { type: Object, default: () => {} } },
+  props: ['gridData', 'tile'],
   data: () => ({
     itemsPerPage: 15,
-    fetchStatus,
   }),
   computed: {
     getItems() {
       return this.gridData.loading ? 3 : this.gridData.list
+    },
+    showLoading() {
+      return this.gridData.status === fetchStatus.fetching
+    },
+    showError() {
+      return this.gridData.error === fetchStatus.error
     },
   },
 }

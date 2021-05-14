@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" width="256" flat>
+  <v-card class="mx-auto" height="100%" flat>
     <v-list nav dense>
       <v-list-item>
         <v-list-item-avatar>

@@ -6,6 +6,7 @@ const initialState = {
   selectedTab: 0,
   tabDataList: [],
   search: '',
+  badgeCount: 0,
 }
 
 export default {
@@ -16,20 +17,35 @@ export default {
     selectedTabData: (state) => state.tabs[state.selectedTab] || { id: 1 },
   },
   mutations: {
-    SET_TABS(state, payload) {
-      state.tabs = payload
+    FETCH_TABS_INIT(state) {
+      Object.assign(state, {
+        ...initialState,
+        isTabBarLoading: fetchStatus.fetching,
+      })
+    },
+    FETCH_TABS_SUCCESS(state, payload) {
+      Object.assign(state, { tabs: payload, isTabBarLoading: fetchStatus.done })
+    },
+    FETCH_TABS_FAILED(state) {
+      Object.assign(state, {
+        ...initialState,
+        isTabBarLoading: fetchStatus.error,
+      })
     },
     SET_SELECTED_TAB(state, payload) {
       state.selectedTab = payload
     },
     SET_LOADING(state, payload) {
-      state.isTabBarLoading = payload
+      state.loading = payload
     },
     SET_SEARCH(state, payload) {
       state.search = payload
     },
+    SET_BADGE_COUNT(state, payload) {
+      state.badgeCount = payload
+    },
     RESET_TABS(state) {
-      Object.assign(state, initialState)
+      Object.assign(state, { ...initialState })
     },
   },
   actions: {
@@ -37,22 +53,27 @@ export default {
       { commit },
       { query, apollo, changeResponse = (response) => response },
     ) {
-      commit('SET_LOADING', fetchStatus.fetching)
+      commit('FETCH_TABS_INIT')
       try {
         const { data } = await apollo.query({
           query,
         })
-        commit('SET_TABS', changeResponse(data))
-        commit('SET_LOADING', fetchStatus.done)
+        commit('FETCH_TABS_SUCCESS', changeResponse(data))
       } catch (error) {
-        commit('SET_LOADING', fetchStatus.error)
+        commit('FETCH_TABS_FAILED', fetchStatus.error)
       }
+    },
+    async setTabs({ commit }, payload) {
+      commit('FETCH_TABS_SUCCESS', payload)
     },
     setSearch({ commit }, payload) {
       commit('SET_SEARCH', payload)
     },
     setSelectedTab({ commit }, payload) {
       commit('SET_SELECTED_TAB', payload)
+    },
+    setBadgeCount({ commit }, payload) {
+      commit('SET_BADGE_COUNT', payload)
     },
     resetTabs({ commit }, payload) {
       commit('RESET_TABS', payload)
