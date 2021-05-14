@@ -48,6 +48,8 @@ export const POKEMON_BY_NAME = gql`
       id
       location_area_encounters
       name
+      height
+      weight
       stats {
         stat {
           name

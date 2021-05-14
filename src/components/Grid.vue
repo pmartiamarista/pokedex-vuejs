@@ -11,8 +11,8 @@
     <v-row v-else>
       <v-col
         cols="12"
-        sm="6"
-        md="4"
+        sm="4"
+        md="3"
         lg="3"
         xl="2"
         class="ma-0"

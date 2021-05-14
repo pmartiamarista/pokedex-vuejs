@@ -1,96 +1,110 @@
 <template>
-  <v-card
-    v-if="$apollo.queries.pokemon.loading"
+  <v-skeleton-loader
     class="mx-auto"
-    max-width="360"
-  >
-    <v-list-item three-line>
-      <v-list-item-content>
-        <div class="overline mb-0">#{{ item.id }}</div>
-        <v-list-item-title class="headline mb-1 pokemon-name">
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <span v-bind="attrs" v-on="on" v-text="item.name" />
-            </template>
-            <span v-text="item.name" class="pokemon-name" />
-          </v-tooltip>
-        </v-list-item-title>
-      </v-list-item-content>
-
-      <v-list-item-avatar size="75" color="grey lighten-5" rounded />
-    </v-list-item>
-    <v-card-text class="py-0">
-      <v-row class="ma-0 text-center">
-        <v-col class="pa-0">
-          <TypeChip />
-        </v-col>
-      </v-row>
-    </v-card-text>
-    <v-card-actions>
-      <v-btn text color="secondary" @click="reveal = true">More</v-btn>
-    </v-card-actions>
-  </v-card>
+    max-width="300"
+    type="card"
+    v-if="$apollo.queries.pokemon.loading"
+  />
 
   <div v-else-if="$apollo.queries.pokemon.error">Error</div>
 
-  <v-card v-else class="mx-auto" max-width="360">
-    <v-list-item three-line>
-      <v-list-item-content>
-        <div class="overline mb-0">#{{ item.id }}</div>
-        <v-list-item-title class="headline mb-1 pokemon-name">
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <span v-bind="attrs" v-on="on" v-text="item.name" />
-            </template>
-            <span v-text="item.name" class="pokemon-name" />
-          </v-tooltip>
-        </v-list-item-title>
-      </v-list-item-content>
-
-      <v-list-item-avatar size="75" color="grey lighten-4" rounded>
+  <v-card class="mx-auto" max-width="360" v-else>
+    <v-hover v-slot="{ hover }">
+      <v-col
+        :class="`grey ${
+          $vuetify.theme.dark ? 'darken-2' : 'lighten-4'
+        } pa-0 ma-0`"
+        style="border-radius: 4px 4px 0 0;"
+      >
         <v-img
           contain
+          :aspect-ratio="4 / 3"
           :src="
-            (pokemon.sprites && pokemon.sprites.front_default) ||
+            (pokemon.sprites && pokemon.sprites[showShiny]) ||
             require('../assets/Unown.png')
           "
           :lazy-src="
-            (pokemon.sprites && pokemon.sprites.front_default) ||
+            (pokemon.sprites && pokemon.sprites[showShiny]) ||
             require('../assets/Unown.png')
           "
-          max-width="75"
-          max-height="75"
         >
-          <template v-slot:placeholder>
-            <v-row class="fill-height ma-0" align="center" justify="center">
-              <v-progress-circular indeterminate color="primary" />
-            </v-row>
-          </template>
+          <v-expand-transition>
+            <v-col
+              v-if="hover"
+              :class="`grey ${
+                $vuetify.theme.dark ? 'darken-2' : 'lighten-4'
+              } d-flex transition-fast-in-fast-out v-card--reveal`"
+              style="height: 100%; border-radius: 4px 4px 0 0;"
+            >
+              <v-col>
+                <v-row>
+                  <span style="font-weight: 500;">
+                    Height:
+                  </span>
+                  <span style="font-weight: 400;">
+                    {{ pokemon.height }}
+                  </span>
+                </v-row>
+                <v-row>
+                  <span style="font-weight: 500;">
+                    Weight:
+                  </span>
+                  <span style="font-weight: 400;">
+                    {{ pokemon.weight }}
+                  </span>
+                </v-row>
+                <v-row v-for="{ name, base_stat } in pokemon.stats" :key="name">
+                  <span style="font-weight: 500; text-transform: capitalize;">
+                    {{ name }}:
+                  </span>
+                  <span style="font-weight: 400;">
+                    {{ base_stat }}
+                  </span>
+                </v-row>
+              </v-col>
+            </v-col>
+          </v-expand-transition>
         </v-img>
-      </v-list-item-avatar>
-    </v-list-item>
-    <v-card-text class="py-0">
-      <v-row class="ma-0 text-center">
+      </v-col>
+    </v-hover>
+    <v-card-text class="pt-1" style="position: relative;">
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            absolute
+            fab
+            x-small
+            right
+            top
+            @click="shiny = !shiny"
+            :color="shiny ? 'secondary' : 'primary'"
+            v-bind="attrs"
+            v-on="on"
+          >
+            <v-icon>mdi-star-four-points-outline</v-icon>
+          </v-btn>
+        </template>
+        <span>Shiny</span>
+      </v-tooltip>
+
+      <h4 class="font-weight-bold subtitle mb-0">#{{ item.id }}</h4>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <h1
+            v-bind="attrs"
+            v-on="on"
+            class="font-weight-dark title mb-0 pokemon-name"
+            v-text="item.name"
+          />
+        </template>
+        <span v-text="item.name" class="pokemon-name" />
+      </v-tooltip>
+      <v-row class="ma-1 text-center">
         <v-col v-for="{ name } in pokemon.types" :key="name" class="pa-0">
           <TypeChip :type="name" />
         </v-col>
       </v-row>
     </v-card-text>
-    <v-card-actions>
-      <v-btn text color="secondary" @click="reveal = true">More</v-btn>
-    </v-card-actions>
-    <v-expand-transition>
-      <v-card
-        v-if="reveal"
-        class="transition-fast-in-fast-out v-card--reveal"
-        style="height: 100%;"
-      >
-        <v-card-text class="pb-0"></v-card-text>
-        <v-card-actions class="pt-0">
-          <v-btn text color="secondary" @click="reveal = false">Close</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-expand-transition>
   </v-card>
 </template>
 
@@ -108,6 +122,7 @@ export default {
   data: () => ({
     reveal: false,
     pokemon: '',
+    shiny: false,
   }),
   apollo: {
     pokemon: {
@@ -122,6 +137,11 @@ export default {
         stats: getStats(pokemon.stats),
         types: getTypes(pokemon.types),
       }),
+    },
+  },
+  computed: {
+    showShiny() {
+      return this.shiny ? 'front_shiny' : 'front_default'
     },
   },
 }
