@@ -6,8 +6,8 @@
       </v-col>
     </v-row>
 
+    <div v-else-if="getItems.length === 0">Sorry, there's no data to show</div>
     <div v-else-if="showError">Error</div>
-
     <v-row v-else>
       <v-col
         cols="12"
@@ -17,7 +17,7 @@
         xl="2"
         class="ma-0"
         v-for="item in getItems"
-        :key="item.id"
+        :key="`${item.id}-${item.name}`"
       >
         <component :is="tile" :item="item" />
       </v-col>

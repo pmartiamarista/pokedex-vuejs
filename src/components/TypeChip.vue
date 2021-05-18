@@ -19,8 +19,10 @@ import { pokemonTypeColor } from '../utils/constants'
 export default {
   name: 'TypeChip',
   props: {
-    type: String,
-    default: () => ` `,
+    type: {
+      type: String,
+      default: () => ` `,
+    },
   },
   computed: {
     typeColor() {
