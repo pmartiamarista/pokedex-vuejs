@@ -4,7 +4,6 @@ const initialState = {
   tabs: [],
   isTabBarLoading: fetchStatus.idle,
   selectedTab: 0,
-  tabDataList: [],
   search: '',
   badgeCount: 0,
 }
