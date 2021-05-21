@@ -11,9 +11,9 @@
 
     <v-card class="mx-auto" max-width="360" v-else>
       <v-col
-        :class="`grey ${
-          $vuetify.theme.dark ? 'darken-2' : 'lighten-4'
-        } pa-0 ma-0`"
+        :class="
+          `grey ${$vuetify.theme.dark ? 'darken-2' : 'lighten-4'} pa-0 ma-0`
+        "
         style="border-radius: 4px 4px 0 0;"
       >
         <v-img
@@ -25,9 +25,11 @@
           <v-expand-transition>
             <v-col
               v-if="details"
-              :class="`grey ${
-                $vuetify.theme.dark ? 'darken-2' : 'lighten-4'
-              } d-flex transition-fast-in-fast-out v-card--reveal`"
+              :class="
+                `grey ${
+                  $vuetify.theme.dark ? 'darken-2' : 'lighten-4'
+                } d-flex transition-fast-in-fast-out v-card--reveal`
+              "
               style="height: 100%; border-radius: 4px 4px 0 0;"
             >
               <v-col>
@@ -87,20 +89,20 @@
 </template>
 
 <script>
-import { POKEMON_BY_NAME } from '../graphql/queries'
-import { getTypes, getStats } from '../utils/utils'
-import TypeChip from './TypeChip.vue'
-import FabButtons from './FabButtons'
+import { POKEMON_BY_NAME } from "../graphql/queries";
+import { getTypes, getStats } from "../utils/utils";
+import TypeChip from "./TypeChip.vue";
+import FabButtons from "./FabButtons";
 
 export default {
-  name: 'GridTile',
+  name: "GridTile",
   components: { TypeChip, FabButtons },
   props: {
     item: { type: Object, default: () => {} },
   },
   data: () => ({
     reveal: false,
-    pokemon: '',
+    pokemon: "",
     image: {
       shiny: false,
       front: true,
@@ -111,10 +113,10 @@ export default {
     pokemon: {
       query: POKEMON_BY_NAME,
       variables() {
-        return { name: String(this.item.name).trim() }
+        return { name: String(this.item.name).trim() };
       },
-      fetchPolicy: 'cache-and-network',
-      nextFetchPolicy: 'cache-only',
+      fetchPolicy: "cache-and-network",
+      nextFetchPolicy: "cache-only",
       update: ({ pokemon }) => ({
         ...pokemon,
         stats: getStats(pokemon.stats),
@@ -124,65 +126,68 @@ export default {
   },
 
   computed: {
+    isMobile() {
+      return this.$vuetify.breakpoint.xs;
+    },
     showShiny() {
-      return this.image.shiny ? 'shiny' : 'default'
+      return this.image.shiny ? "shiny" : "default";
     },
     showSide() {
-      return this.image.front ? 'front' : 'back'
+      return this.image.front ? "front" : "back";
     },
     showImage() {
       return (
         (this.pokemon.sprites &&
           this.pokemon.sprites[`${this.showSide}_${this.showShiny}`]) ||
-        require('../assets/Unown.png')
-      )
+        require("../assets/Unown.png")
+      );
     },
     imageOptions() {
       return [
         {
           action: () => (this.image.shiny = !this.image.shiny),
-          color: 'purple',
+          color: "purple",
           icon: this.image.shiny
-            ? 'mdi-star-four-points'
-            : 'mdi-star-four-points-outline',
+            ? "mdi-star-four-points"
+            : "mdi-star-four-points-outline",
           tooltip: {
             active: true,
-            text: 'Shiny',
+            text: "Shiny",
           },
         },
         {
           action: () => (this.image.front = !this.image.front),
-          color: 'pink',
+          color: "pink",
           icon: this.image.front
-            ? 'mdi-axis-z-rotate-counterclockwise'
-            : 'mdi-axis-z-rotate-clockwise',
+            ? "mdi-axis-z-rotate-counterclockwise"
+            : "mdi-axis-z-rotate-clockwise",
           tooltip: {
             active: true,
-            text: 'Rotate',
+            text: "Rotate",
           },
         },
-      ]
+      ];
     },
     infoDetailsOption() {
       return [
         {
           action: () => (this.details = !this.details),
-          color: 'magenta',
-          icon: this.details ? 'mdi-view-list' : 'mdi-view-list-outline',
+          color: "magenta",
+          icon: this.details ? "mdi-view-list" : "mdi-view-list-outline",
           tooltip: {
             active: true,
-            text: this.details ? 'Close info' : 'More info',
+            text: this.details ? "Close info" : "More info",
           },
         },
-      ]
+      ];
     },
     tileOptions() {
       return this.details
         ? this.infoDetailsOption
-        : [...this.infoDetailsOption, ...this.imageOptions]
+        : [...this.infoDetailsOption, ...this.imageOptions];
     },
   },
-}
+};
 </script>
 
 <style scoped>

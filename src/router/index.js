@@ -29,9 +29,9 @@ const routes = [
     component: (resolve) => require(["../views/Regions.vue"], resolve),
     icon: "mdi-earth",
     meta: {
-      title: "Regions - Pokedex",
+      title: "Regions | Pokedex",
       meta: {
-        title: "Home - Pokedex",
+        title: "Regions | Pokedex",
         metaTags: [
           {
             name: "description",
@@ -51,9 +51,9 @@ const routes = [
     component: (resolve) => require(["../views/Types.vue"], resolve),
     icon: "mdi-atom",
     meta: {
-      title: "Regions - Pokedex",
+      title: "Types | Pokedex",
       meta: {
-        title: "Home - Pokedex",
+        title: "Types | Pokedex",
         metaTags: [
           {
             name: "description",

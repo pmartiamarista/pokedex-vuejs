@@ -1,8 +1,8 @@
 <template>
   <v-app-bar app>
     <v-app-bar-nav-icon @click="handleDrawer"></v-app-bar-nav-icon>
-    <v-toolbar-title v-text="routeName" />
-    <v-spacer />
+    <v-toolbar-title v-show="!isMobile" v-text="routeName" />
+    <v-spacer v-show="!isMobile" />
     <Searchbar />
     <v-progress-linear
       :active="showLoading"
@@ -33,35 +33,38 @@
 </template>
 
 <script>
-import { createNamespacedHelpers } from 'vuex'
-import { fetchStatus } from '../../utils/constants'
-import Searchbar from '../Searchbar.vue'
-const { mapGetters, mapState, mapActions } = createNamespacedHelpers('layout')
+import { createNamespacedHelpers } from "vuex";
+import { fetchStatus } from "../../utils/constants";
+import Searchbar from "../Searchbar.vue";
+const { mapGetters, mapState, mapActions } = createNamespacedHelpers("layout");
 
 export default {
-  name: 'Drawer',
+  name: "Drawer",
   components: { Searchbar },
   props: {
     handleDrawer: {
       type: Function,
-      default: () => console.log('No action'),
+      default: () => console.log("No action"),
     },
   },
   methods: {
-    ...mapActions(['setSelectedTab']),
+    ...mapActions(["setSelectedTab"]),
   },
   computed: {
-    ...mapGetters(['hasTabs']),
-    ...mapState(['tabs', 'selectedTab', 'isTabBarLoading', 'badgeCount']),
+    ...mapGetters(["hasTabs"]),
+    ...mapState(["tabs", "selectedTab", "isTabBarLoading", "badgeCount"]),
+    isMobile() {
+      return this.$vuetify.breakpoint.xs;
+    },
     routeName() {
-      return this.$route.name
+      return this.$route.name;
     },
     showLoading() {
-      return this.isTabBarLoading === fetchStatus.fetching
+      return this.isTabBarLoading === fetchStatus.fetching;
     },
     showTabs() {
-      return this.hasTabs && this.isTabBarLoading === fetchStatus.done
+      return this.hasTabs && this.isTabBarLoading === fetchStatus.done;
     },
   },
-}
+};
 </script>
