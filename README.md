@@ -1,24 +1,10 @@
 # Pokedex VUE.JS
 
-## Project setup
-```
-yarn install
-```
+Description: SPA, consuming two graphql Pokemon APIs, using Apollo Client, Vuetify, Vue Router, Vuex.
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+** APIs **
+https://graphql-pokeapi.vercel.app/api/graphql
 
-### Compiles and minifies for production
-```
-yarn build
-```
+https://beta.pokeapi.co/graphql/v1beta
 
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Running app: https://pokedexvuej.herokuapp.com
